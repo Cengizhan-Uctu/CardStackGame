@@ -7,24 +7,156 @@ public class CardCountChange : MonoBehaviour
     [SerializeField] GameObject card;
     [SerializeField] GameObject rightHend;
     [SerializeField] GameObject lesftHend;
-    List<GameObject> carts = new List<GameObject>();
-
+    public static List<GameObject> cards = new List<GameObject>();
+    public static bool cardsRightHand;
     Vector3 leftHendDefauldPos;
-   
-    void Start()
+    Vector3 rightHendDefauldPos;
+    float totalHight;
+
+    private void Awake()
     {
-        leftHendDefauldPos = lesftHend.transform.localPosition;
+        cardsRightHand = true;
+        cards.Clear();
+        leftHendDefauldPos = lesftHend.transform.position;
+        rightHendDefauldPos = rightHend.transform.localPosition;
         leftHendDefauldPos.y = 2.2f;
-        for (int i = 0; i < 10; i++)
+        totalHight = 0;
+        totalHight = leftHendDefauldPos.y;
+        CardİncreaseLeft(10);
+    }
+  
+    public void CardİncreaseLeft(int amount)
+    {
+
+        for (int i = 0; i < amount; i++)
         {
-            leftHendDefauldPos.y += 0.15f;
-            GameObject newCard = Instantiate(card, leftHendDefauldPos, Quaternion.identity);
+            leftHendDefauldPos.z = transform.position.z;
+            totalHight+= 0.15f;
+            leftHendDefauldPos.y = totalHight;
+            GameObject newCard = Instantiate(card, leftHendDefauldPos,Quaternion.identity);
             newCard.transform.SetParent(transform);
-            carts.Add(newCard);
+            CardCountChange.cards.Add(newCard);
 
         }
     }
+    public void CardİncreaseRight(int amount)// eklerken insert methodu kullan
+    {
 
-   
-  
+        for (int i = 0; i < amount; i++)
+        {
+            rightHendDefauldPos.z = transform.position.z;
+            totalHight += 0.15f;
+            rightHendDefauldPos.y =totalHight;
+            GameObject newCard = Instantiate(card, rightHendDefauldPos, Quaternion.Euler(new Vector3(0, 0, 180)));
+            newCard.transform.SetParent(transform);
+            CardCountChange.cards.Insert(0,newCard);
+
+        }
+    }
+    public void CardDecreaseLeft(int amount)
+    {
+
+        amount *= -1;
+        if (CardCountChange.cardsRightHand)// false dedi
+        {
+            for (int i = 0; i < amount; i++)
+            {
+                if (cards.Count > 0)
+                {
+                    totalHight -= 0.15f;
+                    Destroy(CardCountChange.cards[cards.Count - 1]);
+                    CardCountChange.cards.RemoveAt(cards.Count - 1);
+                }
+
+            }
+        }
+        else
+        {
+            for (int i = 0; i < amount; i++)
+            {
+                if (cards.Count > 0)
+                {
+                    totalHight -= 0.15f;
+                    Destroy(CardCountChange.cards[0]);
+                    CardCountChange.cards.RemoveAt(0);
+                }
+
+            }
+        }
+
+    }
+    public void CardDecreaseRight(int amount)
+    {
+        amount *= -1;
+        if (!CardCountChange.cardsRightHand)
+        {
+            for (int i = 0; i < amount; i++)
+            {
+               
+                if (cards.Count > 0)
+                {
+                    totalHight -= 0.15f;
+                    Destroy(CardCountChange.cards[0]);
+                    CardCountChange.cards.RemoveAt(0);
+                }
+              
+
+            }
+        }
+        else
+        {
+            for (int i = 0; i < amount; i++)
+            {
+
+                if (cards.Count > 0)
+                {
+                    totalHight -= 0.15f;
+                    Destroy(CardCountChange.cards[cards.Count - 1]);
+                    CardCountChange.cards.RemoveAt(cards.Count - 1);
+                }
+
+
+            }
+        }
+
+    }
+
+
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+
+        int otherCount = other.GetComponent<GateProcress>().Count;
+        if (otherCount <= 0)
+        {
+            if (other.CompareTag("LeftGate") && !CardCountChange.cardsRightHand)
+            {
+                Debug.Log("1");
+                CardDecreaseLeft(otherCount);
+            }
+            if (other.CompareTag("RightGate") && CardCountChange.cardsRightHand)
+            {
+                Debug.Log("2");
+                CardDecreaseRight(otherCount);
+               
+            }
+        }
+        else
+        {
+            if (other.CompareTag("LeftGate") && !CardCountChange.cardsRightHand)
+            {
+                Debug.Log("3");
+                CardİncreaseRight(otherCount);
+            }
+            if (other.CompareTag("RightGate") && CardCountChange.cardsRightHand)
+            {
+                Debug.Log("4");
+                CardİncreaseLeft(otherCount);
+            }
+        }
+
+
+    }
+
 }

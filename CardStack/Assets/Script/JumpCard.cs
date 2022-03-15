@@ -4,10 +4,9 @@ using UnityEngine;
 using DG.Tweening;
 public class JumpCard : MonoBehaviour
 {
-    [SerializeField] GameObject card;
     [SerializeField] GameObject rightHend;
     [SerializeField] GameObject lesftHend;
-    List<GameObject> carts = new List<GameObject>();
+   
     Vector3 rightHendDefauldPos;
     Vector3 leftHendDefauldPos;
     bool moveDelayLeft = true;
@@ -18,19 +17,11 @@ public class JumpCard : MonoBehaviour
   
     void Start()
     {
+       
         DOTween.Init();
         rightHendDefauldPos = rightHend.transform.localPosition;
         leftHendDefauldPos = lesftHend.transform.localPosition;
-       
-        leftHendDefauldPos.y = 2.2f;
-        for (int i = 0; i < 10; i++)
-        {
-            leftHendDefauldPos.y += 0.15f;
-            GameObject newCard = Instantiate(card, leftHendDefauldPos, Quaternion.identity);
-            newCard.transform.SetParent(transform);
-            carts.Add(newCard);
 
-        }
     }
    
 
@@ -38,7 +29,7 @@ public class JumpCard : MonoBehaviour
     {
         if (kindMove == 0 && moveDelayLeft&& !repeatJumpLeft)
         {
-            for (int i = carts.Count - 1; i >= 0; i--)
+            for (int i = CardCountChange.cards.Count - 1; i >= 0; i--)
             {
 
                 JumpLeft(i);
@@ -48,7 +39,7 @@ public class JumpCard : MonoBehaviour
         }
         if (kindMove == 1 && moveDelayRight&& !repeatJumpRight)
         {
-            for (int i = 0; i <= carts.Count - 1; i++)
+            for (int i = 0; i <= CardCountChange.cards.Count - 1; i++)
             {
 
                 JumpRight(i);
@@ -66,18 +57,19 @@ public class JumpCard : MonoBehaviour
 
         if (i == 0)
         {
-            sequence.Append(carts[i].transform.DOLocalJump(leftHendDefauldPos, 2.5f, 1, 0.6f));
-            sequence.Join(carts[i].transform.DOLocalRotate(new Vector3(0, 0, 0), 0.6f, RotateMode.FastBeyond360)
+            sequence.Append(CardCountChange.cards[i].transform.DOLocalJump(leftHendDefauldPos, 2.5f, 1, 0.6f));
+            sequence.Join(CardCountChange.cards[i].transform.DOLocalRotate(new Vector3(0, 0, 0), 0.6f, RotateMode.FastBeyond360)
                 .SetDelay(0.6f)
                 .OnComplete(() => CheckAnimadionEndRight())) ;
-            sequence.Join(carts[i].transform.DOLocalRotate(new Vector3(10, 0, 0), 0.6f, RotateMode.FastBeyond360));
+            sequence.Join(CardCountChange.cards[i].transform.DOLocalRotate(new Vector3(10, 0, 0), 0.6f, RotateMode.FastBeyond360));
+            return;
         }
 
-        sequence.Append(carts[i].transform.DOLocalJump(leftHendDefauldPos, 2.5f, 1, 0.6f)
-            .OnComplete(() => carts[i].transform.DOPunchScale(new Vector3(.18f, 0, .18f), 0.2f)));
-        sequence.Join(carts[i].transform.DOLocalRotate(new Vector3(0, 0, 0), 0.6f, RotateMode.FastBeyond360));
-        sequence.Join(carts[i].transform.DOLocalRotate(new Vector3(10, 0, 0), 0.6f, RotateMode.FastBeyond360)
-            .OnComplete(() => carts[i].transform.DOLocalRotate(new Vector3(0, 0, 0), 0.1f, RotateMode.FastBeyond360)));
+        sequence.Append(CardCountChange.cards[i].transform.DOLocalJump(leftHendDefauldPos, 2.5f, 1, 0.6f)
+            .OnComplete(() => CardCountChange.cards[i].transform.DOPunchScale(new Vector3(.18f, 0, .18f), 0.2f)));
+        sequence.Join(CardCountChange.cards[i].transform.DOLocalRotate(new Vector3(0, 0, 0), 0.6f, RotateMode.FastBeyond360));
+        sequence.Join(CardCountChange.cards[i].transform.DOLocalRotate(new Vector3(10, 0, 0), 0.6f, RotateMode.FastBeyond360)
+            .OnComplete(() => CardCountChange.cards[i].transform.DOLocalRotate(new Vector3(0, 0, 0), 0.1f, RotateMode.FastBeyond360)));
        
     }
     void JumpLeft(int i)
@@ -85,20 +77,20 @@ public class JumpCard : MonoBehaviour
         repeatJumpLeft = true;
         moveDelayRight = false;
         rightHendDefauldPos.y += 0.15f;
-        if (i == carts.Count - 1)
+        if (i == CardCountChange.cards.Count - 1)
         {
-            sequence.Append(carts[i].transform.DOLocalJump(rightHendDefauldPos, 2.5f, 1, 0.6f));
-            sequence.Join(carts[i].transform.DOLocalRotate(new Vector3(0, 0, 180), 0.6f, RotateMode.FastBeyond360)
+            sequence.Append(CardCountChange.cards[i].transform.DOLocalJump(rightHendDefauldPos, 2.5f, 1, 0.6f));
+            sequence.Join(CardCountChange.cards[i].transform.DOLocalRotate(new Vector3(0, 0, 180), 0.6f, RotateMode.FastBeyond360)
                 .SetDelay(0.6f)
                 .OnComplete(() => CheckAnimadionEndLeft()));
-            sequence.Join(carts[i].transform.DOLocalRotate(new Vector3(10, 0, 180), 0.6f, RotateMode.FastBeyond360));
-           
+            sequence.Join(CardCountChange.cards[i].transform.DOLocalRotate(new Vector3(10, 0, 180), 0.6f, RotateMode.FastBeyond360));
+            return;
         }
-        sequence.Append(carts[i].transform.DOLocalJump(rightHendDefauldPos, 2.5f, 1, 0.6f)
-            .OnComplete(() => carts[i].transform.DOPunchScale(new Vector3(.18f, 0, .18f), 0.2f)));
-        sequence.Join(carts[i].transform.DOLocalRotate(new Vector3(0, 0, 180), 0.6f, RotateMode.FastBeyond360));
-        sequence.Join(carts[i].transform.DOLocalRotate(new Vector3(10, 0, 180), 0.6f, RotateMode.FastBeyond360)
-            .OnComplete(() => carts[i].transform.DOLocalRotate(new Vector3(0, 0, 180), 0.1f, RotateMode.FastBeyond360)));
+        sequence.Append(CardCountChange.cards[i].transform.DOLocalJump(rightHendDefauldPos, 2.5f, 1, 0.6f)
+            .OnComplete(() => CardCountChange.cards[i].transform.DOPunchScale(new Vector3(.18f, 0, .18f), 0.2f)));
+        sequence.Join(CardCountChange.cards[i].transform.DOLocalRotate(new Vector3(0, 0, 180), 0.6f, RotateMode.FastBeyond360));
+        sequence.Join(CardCountChange.cards[i].transform.DOLocalRotate(new Vector3(10, 0, 180), 0.6f, RotateMode.FastBeyond360)
+            .OnComplete(() => CardCountChange.cards[i].transform.DOLocalRotate(new Vector3(0, 0, 180), 0.1f, RotateMode.FastBeyond360)));
         
 
 
@@ -106,18 +98,21 @@ public class JumpCard : MonoBehaviour
     }
     void CheckAnimadionEndRight()
     {
+        CardCountChange.cardsRightHand = !CardCountChange.cardsRightHand;
         rightHendDefauldPos.y = 0;
         moveDelayLeft = true;
         repeatJumpLeft = false;
     }
     void CheckAnimadionEndLeft()
     {
+        CardCountChange.cardsRightHand = !CardCountChange.cardsRightHand;
         leftHendDefauldPos.y = 0;
         moveDelayRight = true;
         repeatJumpRight = false;
     }
     public void JumpDirection(int direction)
     {
+        
         StartCoroutine(SwichUpCards(direction));
     }
     //#region PcTest
