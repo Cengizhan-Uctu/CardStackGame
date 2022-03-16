@@ -68,7 +68,7 @@ public class CardCountChange : MonoBehaviour
                     CardCountChange.cards.RemoveAt(cards.Count - 1);
                     if (cards.Count < 1)
                     {
-                        Debug.Log("gameover");
+                        GameManager.Instance.GameOver();
                     }
                 }
                 
@@ -86,7 +86,7 @@ public class CardCountChange : MonoBehaviour
                     CardCountChange.cards.RemoveAt(0);
                     if (CardCountChange.cards.Count < 1)
                     {
-                        Debug.Log("gameover");// game over events
+                        GameManager.Instance.GameOver();
                     }
                 }
                
@@ -108,12 +108,13 @@ public class CardCountChange : MonoBehaviour
                     totalHight -= 0.15f;
                     Destroy(CardCountChange.cards[0]);
                     CardCountChange.cards.RemoveAt(0);
-                    Debug.Log(CardCountChange.cards.Count);
+                    if (CardCountChange.cards.Count < 1)
+                    {
+                        GameManager.Instance.GameOver();
+                    }
+
                 }
-                else if (CardCountChange.cards.Count < 1)
-                {
-                    Debug.Log("gameover");
-                }
+               
 
 
             }
@@ -128,6 +129,10 @@ public class CardCountChange : MonoBehaviour
                     totalHight -= 0.15f;
                     Destroy(CardCountChange.cards[cards.Count - 1]);
                     CardCountChange.cards.RemoveAt(cards.Count - 1);
+                    if (CardCountChange.cards.Count < 1)
+                    {
+                        GameManager.Instance.GameOver();
+                    }
                 }
 
 
@@ -141,18 +146,24 @@ public class CardCountChange : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.CompareTag("FinishLine"))
+        {
+            GameManager.Instance.GameWin();
+            return;
+        }
 
         int otherCount = other.GetComponent<GateProcress>().Count;
+       
         if (otherCount <= 0)
         {
             if (other.CompareTag("LeftGate") && !CardCountChange.cardsRightHand)
             {
-                Debug.Log("1");
+                
                 CardDecreaseLeft(otherCount);
             }
             if (other.CompareTag("RightGate") && CardCountChange.cardsRightHand)
             {
-                Debug.Log("2");
+               
                 CardDecreaseRight(otherCount);
                
             }
@@ -161,16 +172,16 @@ public class CardCountChange : MonoBehaviour
         {
             if (other.CompareTag("LeftGate") && !CardCountChange.cardsRightHand)
             {
-                Debug.Log("3");
+               
                 CardİncreaseRight(otherCount);
             }
             if (other.CompareTag("RightGate") && CardCountChange.cardsRightHand)
             {
-                Debug.Log("4");
+                
                 CardİncreaseLeft(otherCount);
             }
         }
-
+       
 
     }
 

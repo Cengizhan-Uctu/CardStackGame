@@ -19,6 +19,15 @@ public class GateProcress : MonoBehaviour
         {
              numberText.text = "+"+Count.ToString();
         }
+        if (transform.position.x < 0)
+        {
+            gameObject.tag = "LeftGate";
+        }
+        else
+        {
+            
+            gameObject.tag = "RightGate";
+        }
     }
 
 

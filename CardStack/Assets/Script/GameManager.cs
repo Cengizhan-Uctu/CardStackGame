@@ -16,12 +16,7 @@ public class GameManager : SingeltonGenerik<GameManager>
 
     public void GameOver()
     {
-        //if (OnGameOver != null) 
-        //{
-        //    OnGameOver();
-        //}
-
-        // Kisa Yazim
+       
         OnGameOver?.Invoke();
     }
     public void GameWin()
