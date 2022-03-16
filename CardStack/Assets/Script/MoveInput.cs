@@ -8,7 +8,7 @@ public class MoveInput : MonoBehaviour
     private Vector2 startTouchPosition;
     private Vector2 currentTochPosition;
     private Vector2 endTouchPsition;
-    //private bool stopToch;
+    
 
     private float swipRange;
     void Update()
@@ -31,13 +31,13 @@ public class MoveInput : MonoBehaviour
             {
                 jumpDirection.JumpDirection(0);
 
-                //stopToch = true;
+                
             }
             if (distance.x > swipRange)
             {
                 jumpDirection.JumpDirection(1);
 
-                //stopToch = true;
+                
             }
 
         }

@@ -39,7 +39,7 @@ public class CardCountChange : MonoBehaviour
 
         }
     }
-    public void CardİncreaseRight(int amount)// eklerken insert methodu kullan
+    public void CardİncreaseRight(int amount)
     {
 
         for (int i = 0; i < amount; i++)
@@ -57,16 +57,21 @@ public class CardCountChange : MonoBehaviour
     {
 
         amount *= -1;
-        if (CardCountChange.cardsRightHand)// false dedi
+        if (CardCountChange.cardsRightHand)
         {
             for (int i = 0; i < amount; i++)
             {
-                if (cards.Count > 0)
+                if (CardCountChange.cards.Count > 0)
                 {
                     totalHight -= 0.15f;
                     Destroy(CardCountChange.cards[cards.Count - 1]);
                     CardCountChange.cards.RemoveAt(cards.Count - 1);
+                    if (cards.Count < 1)
+                    {
+                        Debug.Log("gameover");
+                    }
                 }
+                
 
             }
         }
@@ -79,7 +84,12 @@ public class CardCountChange : MonoBehaviour
                     totalHight -= 0.15f;
                     Destroy(CardCountChange.cards[0]);
                     CardCountChange.cards.RemoveAt(0);
+                    if (CardCountChange.cards.Count < 1)
+                    {
+                        Debug.Log("gameover");// game over events
+                    }
                 }
+               
 
             }
         }
@@ -98,8 +108,13 @@ public class CardCountChange : MonoBehaviour
                     totalHight -= 0.15f;
                     Destroy(CardCountChange.cards[0]);
                     CardCountChange.cards.RemoveAt(0);
+                    Debug.Log(CardCountChange.cards.Count);
                 }
-              
+                else if (CardCountChange.cards.Count < 1)
+                {
+                    Debug.Log("gameover");
+                }
+
 
             }
         }

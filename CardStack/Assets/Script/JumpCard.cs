@@ -12,7 +12,7 @@ public class JumpCard : MonoBehaviour
     bool moveDelayLeft = true;
     bool moveDelayRight = true;
     bool repeatJumpLeft;
-    bool repeatJumpRight;
+    bool repeatJumpRight=true;
     Sequence sequence;
   
     void Start()

@@ -11,7 +11,14 @@ public class GateProcress : MonoBehaviour
     private void Awake()
     {
         Count = procressNumber.Amound;
-        numberText.text = procressNumber.Amound.ToString();
+        if (Count < 0)
+        {
+            numberText.text =Count.ToString();
+        }
+        else
+        {
+             numberText.text = "+"+Count.ToString();
+        }
     }
 
 
