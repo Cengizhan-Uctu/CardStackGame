@@ -4,17 +4,21 @@ using UnityEngine;
 
 public class CardCountChange : MonoBehaviour
 {
+    public static List<GameObject> cards = new List<GameObject>();
     [SerializeField] GameObject card;
     [SerializeField] GameObject rightHend;
     [SerializeField] GameObject lesftHend;
-    public static List<GameObject> cards = new List<GameObject>();
-    public static bool cardsRightHand;
     Vector3 leftHendDefauldPos;
     Vector3 rightHendDefauldPos;
     float totalHight;
+    public static bool cardsRightHand;
+    //public bool isOncolliderStay;
+    public static bool isOntrigerStay;
+
 
     private void Awake()
     {
+        isOntrigerStay = true;
         cardsRightHand = true;
         cards.Clear();
         leftHendDefauldPos = lesftHend.transform.position;
@@ -27,21 +31,24 @@ public class CardCountChange : MonoBehaviour
   
     public void CardİncreaseLeft(int amount)
     {
-
+       
+        totalHight -=0.0241f;
         for (int i = 0; i < amount; i++)
         {
             leftHendDefauldPos.z = transform.position.z;
             totalHight+= 0.15f;
             leftHendDefauldPos.y = totalHight;
-            GameObject newCard = Instantiate(card, leftHendDefauldPos,Quaternion.identity);
+            GameObject newCard = Instantiate(card, leftHendDefauldPos, Quaternion.Euler(new Vector3(0, 0, 0)));
             newCard.transform.SetParent(transform);
             CardCountChange.cards.Add(newCard);
+           
 
         }
     }
     public void CardİncreaseRight(int amount)
     {
-
+       
+        totalHight -= 0.0241f;
         for (int i = 0; i < amount; i++)
         {
             rightHendDefauldPos.z = transform.position.z;
@@ -50,12 +57,12 @@ public class CardCountChange : MonoBehaviour
             GameObject newCard = Instantiate(card, rightHendDefauldPos, Quaternion.Euler(new Vector3(0, 0, 180)));
             newCard.transform.SetParent(transform);
             CardCountChange.cards.Insert(0,newCard);
-
+            
         }
     }
     public void CardDecreaseLeft(int amount)
     {
-
+       
         amount *= -1;
         if (CardCountChange.cardsRightHand)
         {
@@ -77,6 +84,7 @@ public class CardCountChange : MonoBehaviour
         }
         else
         {
+           
             for (int i = 0; i < amount; i++)
             {
                 if (cards.Count > 0)
@@ -97,6 +105,7 @@ public class CardCountChange : MonoBehaviour
     }
     public void CardDecreaseRight(int amount)
     {
+      
         amount *= -1;
         if (!CardCountChange.cardsRightHand)
         {
@@ -144,45 +153,57 @@ public class CardCountChange : MonoBehaviour
 
 
 
-    private void OnTriggerEnter(Collider other)
+    
+    private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("FinishLine"))
+        if (isOntrigerStay == true)
         {
-            GameManager.Instance.GameWin();
-            return;
-        }
+           
+            if (other.CompareTag("FinishLine"))
+            {
+                GameManager.Instance.GameWin();
+                return;
+            }
 
-        int otherCount = other.GetComponent<GateProcress>().Count;
-       
-        if (otherCount <= 0)
-        {
-            if (other.CompareTag("LeftGate") && !CardCountChange.cardsRightHand)
+            int otherCount = other.GetComponent<GateProcress>().Count;
+            if (JumpCard.isCountChange&&CardCountChange.isOntrigerStay)
             {
-                
-                CardDecreaseLeft(otherCount);
-            }
-            if (other.CompareTag("RightGate") && CardCountChange.cardsRightHand)
-            {
-               
-                CardDecreaseRight(otherCount);
-               
-            }
-        }
-        else
-        {
-            if (other.CompareTag("LeftGate") && !CardCountChange.cardsRightHand)
-            {
-               
-                CardİncreaseRight(otherCount);
-            }
-            if (other.CompareTag("RightGate") && CardCountChange.cardsRightHand)
-            {
-                
-                CardİncreaseLeft(otherCount);
-            }
-        }
-       
+                if (otherCount <= 0)
+                {
+                    
+                    if (other.CompareTag("LeftGate") && !CardCountChange.cardsRightHand)
+                    {
+                        CardCountChange.isOntrigerStay = false;
+                        CardDecreaseLeft(otherCount);
+                    }
+                    if (other.CompareTag("RightGate") && CardCountChange.cardsRightHand)
+                    {
+                        CardCountChange.isOntrigerStay = false;
+                        CardDecreaseRight(otherCount);
 
+                    }
+                    
+                }
+                else
+                {
+                   
+                    if (other.CompareTag("LeftGate") && !CardCountChange.cardsRightHand)
+                    {
+                        CardCountChange.isOntrigerStay = false;
+                        CardİncreaseRight(otherCount);
+                    }
+                    if (other.CompareTag("RightGate") && CardCountChange.cardsRightHand)
+                    {
+                        CardCountChange.isOntrigerStay = false;
+                        CardİncreaseLeft(otherCount);
+                    }
+                    
+                }
+            }
+        }
     }
-
+    private void OnTriggerExit(Collider other)
+    {
+        CardCountChange.isOntrigerStay = true;
+    }
 }

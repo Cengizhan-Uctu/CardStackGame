@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fda2fabc7b95bf43a34359270b486a5, type: 3}
   m_Name: pos10
   m_EditorClassIdentifier: 
-  Amound: 10
+  Amound: 7
